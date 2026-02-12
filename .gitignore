@@ -1,0 +1,44 @@
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+env/
+.venv/
+ENV/
+
+# Flask instance folder (for config, DB, etc.)
+instance/
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Database files
+*.sqlite3
+*.db
+
+# Logs
+*.log
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build & distribution
+build/
+dist/
+*.egg-info/
+
+# Node (if frontend inside Flask)
+node_modules/
