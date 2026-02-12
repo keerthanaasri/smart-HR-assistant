@@ -10,7 +10,7 @@ import pandas as pd
 # ---------------- CONFIGURATION ----------------
 st.set_page_config(
     page_title="Smart HR Assistant",
-    page_icon="🧠",
+    page_icon="https://img.icons8.com/fluency/48/artificial-intelligence.png",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -30,17 +30,40 @@ st.markdown("""
 
         /* Custom Header */
         .main-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+        }
+        .main-header img {
+            width: 50px;
+            margin-right: 15px;
+        }
+        .main-header h1 {
             font-size: 2.5rem;
             font-weight: 700;
             color: #4F46E5; /* Indigo 600 */
-            margin-bottom: 0.5rem;
-            text-align: center;
+            margin: 0;
         }
         .sub-header {
             font-size: 1.1rem;
             color: #6B7280; /* Gray 500 */
             text-align: center;
             margin-bottom: 2rem;
+        }
+
+        /* Feature Headers */
+        .feature-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .feature-header img {
+            width: 30px;
+            margin-right: 10px;
+        }
+        .feature-header h3 {
+            margin: 0;
         }
 
         /* Card Styling */
@@ -65,11 +88,6 @@ st.markdown("""
             font-weight: 600;
         }
         
-        /* Metrics */
-        div[data-testid="stMetricValue"] {
-            font-size: 1.8rem;
-            color: #fff;
-        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -215,30 +233,65 @@ def detect_plagiarism_risk(text, required_skills):
 
 # ---------------- UI LAYOUT ----------------
 
+# Icons (Sources: Icons8)
+ICON_APP = "https://img.icons8.com/fluency/96/artificial-intelligence.png"
+ICON_JOB = "https://img.icons8.com/fluency/48/briefcase.png"
+ICON_CULTURE = "https://img.icons8.com/fluency/48/conference-call.png"
+ICON_SETTINGS = "https://img.icons8.com/fluency/48/settings.png"
+ICON_UPLOAD = "https://img.icons8.com/fluency/48/upload-to-cloud.png"
+ICON_ACTION = "https://img.icons8.com/fluency/48/rocket.png"
+ICON_TROPHY = "https://img.icons8.com/fluency/48/trophy.png"
+ICON_MEDAL = "https://img.icons8.com/fluency/48/medal.png"
+
 # Custom Header
-st.markdown('<div class="main-header">🧠 Smart HR Assistant</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-header">Advanced AI-Powered Resume Screening & Parsing Engine</div>', unsafe_allow_html=True)
+st.markdown(f"""
+    <div class="main-header">
+        <img src="{ICON_APP}" alt="Logo">
+        <h1>Smart HR Assistant</h1>
+    </div>
+    <div class="sub-header">Advanced AI-Powered Resume Screening & Parsing Engine</div>
+""", unsafe_allow_html=True)
 
 # Sidebar
 with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/3135/3135715.png", width=80) 
-    st.markdown("### 📋 Job Configuration")
+    st.image(ICON_APP, width=80) 
+    
+    st.markdown(f"""
+        <div class="feature-header">
+            <img src="{ICON_JOB}">
+            <h3>Job Configuration</h3>
+        </div>
+    """, unsafe_allow_html=True)
     
     job_description = st.text_area(
         "Job Description (JD)", 
         height=250, 
         placeholder="Paste the full job description here...",
-        help="The core text used for semantic matching."
+        label_visibility="visible"
     )
     
+    st.markdown(f"""
+        <div class="feature-header" style="margin-top: 1rem;">
+            <img src="{ICON_CULTURE}">
+            <h3>Company Culture</h3>
+        </div>
+    """, unsafe_allow_html=True)
+
     company_culture = st.text_input(
-        "Company Culture / Values", 
+        "Values", 
         placeholder="e.g. innovative, collaborative",
-        help="Used to calculate culture fit score based on personality traits."
+        label_visibility="collapsed"
     )
     
     st.markdown("---")
-    st.markdown("### ⚙️ Settings")
+    
+    st.markdown(f"""
+        <div class="feature-header">
+            <img src="{ICON_SETTINGS}">
+            <h3>Settings</h3>
+        </div>
+    """, unsafe_allow_html=True)
+    
     shortlist_limit = st.slider("Candidates to Shortlist", 1, 50, 5)
     
     st.markdown("---")
@@ -248,7 +301,13 @@ with st.sidebar:
 col1, col2 = st.columns([2, 1])
 
 with col1:
-    st.markdown("### 📂 Upload Resumes")
+    st.markdown(f"""
+        <div class="feature-header">
+            <img src="{ICON_UPLOAD}">
+            <h3>Upload Resumes</h3>
+        </div>
+    """, unsafe_allow_html=True)
+    
     uploaded_files = st.file_uploader(
         "Drag and drop PDF resumes here", 
         type=["pdf"], 
@@ -257,7 +316,13 @@ with col1:
     )
 
 with col2:
-    st.markdown("### 🚀 Action")
+    st.markdown(f"""
+        <div class="feature-header">
+            <img src="{ICON_ACTION}">
+            <h3>Action</h3>
+        </div>
+    """, unsafe_allow_html=True)
+    
     analyze_btn = st.button("Analyze Resumes", type="primary", use_container_width=True)
     if uploaded_files:
         st.caption(f"✅ {len(uploaded_files)} files selected")
@@ -333,16 +398,26 @@ if analyze_btn:
             m3.metric("Avg Match Score", f"{df['Total Score'].mean():.1f}%" if not df.empty else "0%")
             m4.metric("Top Score", f"{df['Total Score'].max():.1f}%" if not df.empty else "0%")
             
-            st.markdown("### 🏆 Top Candidates")
+            st.markdown(f"""
+                <div class="feature-header">
+                    <img src="{ICON_TROPHY}">
+                    <h3>Top Candidates</h3>
+                </div>
+            """, unsafe_allow_html=True)
             
             # Display best candidate in a special card
             if not df.empty:
                 top_c = df.iloc[0]
                 st.markdown(f"""
                 <div class="card">
-                    <h3 style="color: #4F46E5; margin-top:0;">🥇 Best Match: {top_c['Candidate']}</h3>
-                    <p style="font-size: 1.2rem;">Total Score: <b>{top_c['Total Score']}%</b> | Experience: <b>{top_c['Experience']}</b></p>
-                    <p style="color: #9CA3AF;">Skills Found: {top_c['Matched Skills'][:150]}...</p>
+                    <div style="display:flex; align-items:center;">
+                        <img src="{ICON_MEDAL}" style="width:40px; margin-right:15px;">
+                        <div>
+                            <h3 style="color: #4F46E5; margin:0;">Best Match: {top_c['Candidate']}</h3>
+                            <p style="font-size: 1.1rem; margin:0;">Total Score: <b>{top_c['Total Score']}%</b> | Experience: <b>{top_c['Experience']}</b></p>
+                        </div>
+                    </div>
+                    <p style="color: #9CA3AF; margin-top:10px;">Skills Found: {top_c['Matched Skills'][:150]}...</p>
                 </div>
                 """, unsafe_allow_html=True)
             
